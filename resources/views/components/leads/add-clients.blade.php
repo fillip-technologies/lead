@@ -1,3 +1,5 @@
+@props(['industries' => [], 'ratings' => [], 'sources' => []])
+
 <main class="flex-1 w-full">
 
     <div class="p-6">
@@ -88,12 +90,13 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-sm font-medium leading-none" for="status">Lead Source*</label>
+                                <label class="text-sm font-medium leading-none" for="source">Lead Source*</label>
                                 <select id="source" name="source"
                                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-                                    <option value="Advertisement">Advertisement</option>
-                                    <option value="Social Media">Social Media</option>
-                                    <option value="GoogleAds">GoogleAds</option>
+                                    <option value="">— Select Source —</option>
+                                    @foreach ($sources as $src)
+                                        <option value="{{ $src->name }}" @selected(old('source') === $src->name)>{{ $src->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -102,25 +105,24 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-2">
-                                <label class="text-sm font-medium leading-none" for="leadrating">Lead Rating*</label>
+                                <label class="text-sm font-medium leading-none" for="rating">Lead Rating*</label>
                                 <select id="rating" name="rating"
                                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-                                    <option value="None">None</option>
-                                    <option value="High">High</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="Low">Low</option>
+                                    <option value="">— Select Rating —</option>
+                                    @foreach ($ratings as $rat)
+                                        <option value="{{ $rat->name }}" @selected(old('rating') === $rat->name)>{{ $rat->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-sm font-medium leading-none" for="leadindustry">Lead
-                                    Industry*</label>
+                                <label class="text-sm font-medium leading-none" for="industry">Lead Industry*</label>
                                 <select id="industry" name="industry"
                                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-                                    <option value="IT Company">IT Company</option>
-                                    <option value="Saleds & Marketing">Saleds & Marketing</option>
-                                    <option value="Digital Marketing">Digital Marketing</option>
-                                    <option value="Finance Support">Finance Support</option>
+                                    <option value="">— Select Industry —</option>
+                                    @foreach ($industries as $ind)
+                                        <option value="{{ $ind->name }}" @selected(old('industry') === $ind->name)>{{ $ind->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

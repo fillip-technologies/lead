@@ -8,6 +8,10 @@ use App\Models\Websitedesign;
 use App\Models\Digitalmarketing;
 use App\Models\Socialmedia;
 use App\Models\Gmb;
+use App\Models\LeadIndustry;
+use App\Models\LeadRating;
+use App\Models\LeadSource;
+use App\Models\LeadAddress;
 
 
 class HomeController extends Controller
@@ -28,10 +32,20 @@ class HomeController extends Controller
         $totaldigitalmarketing = Digitalmarketing::count();
         $socialmedia = Socialmedia::oldest()->get(); 
         $totalsocialmedia = Socialmedia::count();
-        $gmb = Gmb::oldest()->get(); 
+        $gmb = Gmb::oldest()->get();
         $totalgmb = Gmb::count();
 
-        return view('pages.home', compact('leads','totalLeads','totalwebsite','totaldigitalmarketing','totalsocialmedia','totalgmb','activeLeads', 'completedLeads', 'servicesStats', 'website','digitalmarketing','socialmedia','gmb'));
+        $leadIndustries = LeadIndustry::oldest()->get();
+        $leadRatings    = LeadRating::oldest()->get();
+        $leadSources    = LeadSource::oldest()->get();
+        $leadAddresses  = LeadAddress::oldest()->get();
+
+        return view('pages.home', compact(
+            'leads', 'totalLeads', 'totalwebsite', 'totaldigitalmarketing', 'totalsocialmedia', 'totalgmb',
+            'activeLeads', 'completedLeads', 'servicesStats',
+            'website', 'digitalmarketing', 'socialmedia', 'gmb',
+            'leadIndustries', 'leadRatings', 'leadSources', 'leadAddresses'
+        ));
         // return view('pages.home');
     }
 

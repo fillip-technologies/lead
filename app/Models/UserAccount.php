@@ -17,9 +17,7 @@ class UserAccount extends Model
         'phone',
         'location',
         'password',
-        
     ];
 
-      
-   
+    protected $hidden = ['password'];
 }

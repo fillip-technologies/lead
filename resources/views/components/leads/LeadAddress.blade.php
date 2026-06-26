@@ -1,44 +1,114 @@
+@props(['addresses' => []])
+
+@php
+    $input   = 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50';
+    $btnBlue = 'inline-flex items-center justify-center gap-2 text-sm font-medium bg-[#0866ff] text-white hover:bg-[#0866ff]/90 h-10 rounded-md px-5 transition-colors';
+    $btnGray = 'inline-flex items-center justify-center gap-2 text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 h-10 rounded-md px-4 transition-colors';
+    $btnRed  = 'inline-flex items-center justify-center gap-2 text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 h-9 rounded-md px-3 transition-colors';
+@endphp
+
 <main class="flex-1 w-full">
+    <div class="p-6 space-y-6">
 
-    <div class="p-6">
-        <div class="mx-auto">
-            <div class="mb-6">
-                <h2 class="text-3xl font-bold text-foreground mb-2">Add New Lead Address</h2>
-                <p class="text-muted-foreground">Fill in the Lead Address details</p>
+        @if (session('activeTab') === 'leadaddress' && session('success'))
+            <div class="rounded-md bg-green-100 p-3 text-green-800 text-sm flex items-center gap-2">
+                <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
             </div>
-            <div class="rounded-lg border bg-white text-card-foreground shadow-sm">
-                <div class="flex flex-col space-y-1.5 p-6">
-                    <h3 class="text-2xl font-semibold leading-none tracking-tight">Lead Address Information</h3>
-                    <p class="text-sm text-muted-foreground">Enter the new lead address</p>
-                </div>
-                <div class="p-6 pt-0">
-                    <form class="space-y-6">
+        @endif
+        @if ($errors->any() && session('activeTab') === 'leadaddress')
+            <div class="rounded-md bg-red-100 p-4 text-red-800">
+                <p class="font-semibold text-sm mb-1">Please fix the following:</p>
+                <ul class="list-disc list-inside text-sm space-y-1">
+                    @foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+                </ul>
+            </div>
+        @endif
 
+        <div class="rounded-lg border bg-white shadow-sm">
+            <div class="p-6 border-b">
+                <h2 class="text-2xl font-bold text-gray-800">Lead Addresses</h2>
+                <p class="text-sm text-muted-foreground mt-1">Define locations or regions for your leads</p>
+            </div>
+            <div class="p-6">
+                <form method="POST" action="{{ route('lead.address.store') }}" class="space-y-4">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="space-y-2">
-                            <label
-                                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                for="name">Lead Address Name *</label>
-                            <input
-                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                                id="name" placeholder="Username" required="" value="">
+                            <label class="text-sm font-medium leading-none" for="addr-name">Address / Region *</label>
+                            <input id="addr-name" name="name" type="text" placeholder="e.g. Patna, Bihar" required
+                                value="{{ old('name') }}" class="{{ $input }}">
                         </div>
-
                         <div class="space-y-2">
-                            <label
-                                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                for="notes">Additional Notes</label>
-                            <textarea
-                                class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                id="notes" placeholder="Any additional information about the Lead or project..." rows="4"></textarea>
+                            <label class="text-sm font-medium leading-none" for="addr-notes">Notes</label>
+                            <input id="addr-notes" name="notes" type="text" placeholder="Optional description"
+                                value="{{ old('notes') }}" class="{{ $input }}">
                         </div>
-
-
-                        <button
-                            class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-[#0866ff] text-white hover:bg-[#0866ff]/90 h-11 rounded-md px-8 w-full"
-                            type="submit">Add Lead Address</button>
-                    </form>
-                </div>
+                    </div>
+                    <button type="submit" class="{{ $btnBlue }}">
+                        <i class="fa-solid fa-plus"></i> Add Address
+                    </button>
+                </form>
             </div>
         </div>
+
+        <div class="rounded-lg border bg-white shadow-sm">
+            <div class="p-6 border-b">
+                <h3 class="text-lg font-semibold text-gray-800">All Addresses</h3>
+                <p class="text-sm text-muted-foreground">{{ $addresses->count() }} {{ Str::plural('entry', $addresses->count()) }}</p>
+            </div>
+
+            @if ($addresses->isEmpty())
+                <div class="p-10 text-center text-muted-foreground text-sm">
+                    <i class="fa-solid fa-map-marker-alt text-3xl mb-3 text-gray-300"></i>
+                    <p>No addresses added yet. Use the form above to add your first one.</p>
+                </div>
+            @else
+                <div class="divide-y">
+                    @foreach ($addresses as $address)
+                        <div x-data="{ editing: false }" class="p-4">
+                            <div x-show="!editing" class="flex items-start justify-between gap-4">
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-medium text-gray-800">{{ $address->name }}</p>
+                                    @if ($address->notes)
+                                        <p class="text-sm text-muted-foreground mt-0.5">{{ $address->notes }}</p>
+                                    @endif
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <button @click="editing = true" class="{{ $btnGray }}">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                    </button>
+                                    <form action="{{ route('lead.address.destroy', $address->id) }}" method="POST"
+                                        onsubmit="return confirm('Delete \'{{ addslashes($address->name) }}\'?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="{{ $btnRed }}">
+                                            <i class="fa-solid fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <form x-show="editing" action="{{ route('lead.address.update', $address->id) }}"
+                                method="POST" class="space-y-3" x-cloak>
+                                @csrf @method('PUT')
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="text-xs font-medium text-gray-600">Address / Region *</label>
+                                        <input type="text" name="name" value="{{ $address->name }}" required class="{{ $input }}">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-xs font-medium text-gray-600">Notes</label>
+                                        <input type="text" name="notes" value="{{ $address->notes }}" class="{{ $input }}">
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button type="submit" class="{{ $btnBlue }}"><i class="fa-solid fa-check"></i> Save</button>
+                                    <button type="button" @click="editing = false" class="{{ $btnGray }}">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
     </div>
 </main>

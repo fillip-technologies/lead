@@ -168,10 +168,13 @@
 
     <!-- Footer -->
     <div class="p-4 border-t">
-        <button @click="activeTab = 'logout'; sidebarOpen = false; leadFormOpen = false"
-            class="flex items-center gap-3 w-full text-left p-2 rounded-md hover:bg-red-100 text-gray-700 text-sm font-medium transition">
-            <i class="fa-solid fa-right-from-bracket text-red-500 text-base"></i>
-            <span>Logout</span>
-        </button>
+        <form action="{{ route('users.logout') }}" method="POST">
+            @csrf
+            <button type="submit"
+                class="flex items-center gap-3 w-full text-left p-2 rounded-md hover:bg-red-100 text-gray-700 text-sm font-medium transition">
+                <i class="fa-solid fa-right-from-bracket text-red-500 text-base"></i>
+                <span>Logout</span>
+            </button>
+        </form>
     </div>
 </aside>

@@ -162,7 +162,7 @@
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
 
-                                <input type="password" id="confirm_password" placeholder="Confirm password" required
+                                <input type="password" id="confirm_password" name="password_confirmation" placeholder="Confirm password" required
                                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base pl-10 pr-10 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-gray-700 md:text-sm" />
 
                                 <!-- eye button -->
